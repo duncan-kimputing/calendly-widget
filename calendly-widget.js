@@ -10,18 +10,20 @@
 // 2. Add the HTML element: <calendly-widget url="https://calendly.com/your-link"></calendly-widget>
 //
 // ATTRIBUTES:
-// - url: https://calendly.com/duncan-kimputing/get-started
-// - height: 700
-// - hide-details: False
-// - hide-gdpr: False
-// - background-color: 000000
-// - text-color: FFFFFF
-// - primary-color: FF8122
+// - url: Your Calendly scheduling link (required)
+// - height: Minimum height in pixels (default: 700)
+// - hide-details: Set to "true" to hide event details
+// - hide-gdpr: Set to "true" to hide GDPR banner
+// - background-color: Hex color for background (without #)
+// - text-color: Hex color for text (without #)
+// - primary-color: Hex color for primary/accent (without #)
 //
 // EXAMPLE:
 // <calendly-widget
-//   url="https://calendly.com/duncan-kimputing/30min"
-//   primary-color="4EC3E0"
+//   url="https://calendly.com/duncan-kimputing/get-started"
+//   background-color="000000"
+//   text-color="FFFFFF"
+//   primary-color="FF8122"
 // ></calendly-widget>
 // ============================================================
 
@@ -165,11 +167,11 @@ class CalendlyWidget extends HTMLElement {
       @media (max-width: 700px) {
         .calendly-container {
           border-radius: 8px;
-          min-height: 600px;
+          min-height: 900px;
         }
 
         .calendly-iframe {
-          min-height: 600px;
+          min-height: 900px;
         }
       }
     `;
