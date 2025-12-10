@@ -167,7 +167,7 @@ class CalendlyWidget extends HTMLElement {
       @media (max-width: 700px) {
         .calendly-container {
           border-radius: 8px;
-          min-height: 700px;
+          min-height: 1200px;
         }
 
         .calendly-iframe {
