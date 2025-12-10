@@ -99,8 +99,7 @@ class CalendlyWidget extends HTMLElement {
         position: relative;
         overflow: hidden;
         border-radius: 12px;
-        background: #ffffff;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background: transparent;
         transition: height 0.3s ease;
       }
 
