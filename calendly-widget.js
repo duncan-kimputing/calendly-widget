@@ -171,7 +171,7 @@ class CalendlyWidget extends HTMLElement {
         }
 
         .calendly-iframe {
-          min-height: 1400px;
+          min-height: 1000px;
         }
       }
     `;
