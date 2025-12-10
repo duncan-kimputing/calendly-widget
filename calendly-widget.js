@@ -167,11 +167,13 @@ class CalendlyWidget extends HTMLElement {
       @media (max-width: 700px) {
         .calendly-container {
           border-radius: 8px;
-          min-height: 1800px;
+          min-height: 1600px;
         }
 
         .calendly-iframe {
-          min-height: 1800px;
+          min-height: 1600px;
+          transform: scale(0.9);
+          transform-origin: top center;
         }
       }
     `;
