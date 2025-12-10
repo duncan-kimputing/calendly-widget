@@ -10,7 +10,7 @@
 // 2. Add the HTML element: <calendly-widget url="https://calendly.com/your-link"></calendly-widget>
 //
 // ATTRIBUTES:
-// - url: https://calendly.com/duncan-kimputing/30min?
+// - url: https://calendly.com/duncan-kimputing/get-started
 // - height: 700
 // - hide-details: False
 // - hide-gdpr: False
