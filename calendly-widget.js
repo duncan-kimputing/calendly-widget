@@ -6,9 +6,8 @@
 // that the native Wix Calendly integration doesn't handle well.
 //
 // V2 CHANGES:
-// - Starts collapsed with loading spinner
-// - Expands smoothly when Calendly reports its content height
-// - Content fades in after expansion for cleaner UX
+// - Iframe is vertically centered within the container when content
+//   is shorter than the minimum height
 //
 // USAGE:
 // 1. Add this script to your Wix site via Custom Code or Velo
@@ -38,7 +37,6 @@ class CalendlyWidget extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.iframeId = `calendly-iframe-${Math.random().toString(36).substr(2, 9)}`;
     this.boundMessageHandler = this.handleMessage.bind(this);
-    this.hasReceivedHeight = false;
   }
 
   static get observedAttributes() {
@@ -56,7 +54,6 @@ class CalendlyWidget extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue && this.shadowRoot.innerHTML) {
-      this.hasReceivedHeight = false;
       this.render();
     }
   }
@@ -104,29 +101,23 @@ class CalendlyWidget extends HTMLElement {
 
       .calendly-container {
         width: 100%;
-        height: 150px;
+        min-height: ${this.minHeight}px;
         position: relative;
         overflow: hidden;
         border-radius: 12px;
         background: transparent;
-        transition: height 0.4s ease;
-      }
-
-      .calendly-container.expanded {
-        min-height: ${this.minHeight}px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: min-height 0.3s ease;
       }
 
       .calendly-iframe {
         width: 100%;
-        height: 100%;
+        height: ${this.minHeight}px;
         border: none;
         background: transparent;
-        opacity: 0;
-        transition: opacity 0.3s ease 0.2s;
-      }
-
-      .calendly-iframe.visible {
-        opacity: 1;
+        transition: height 0.3s ease;
       }
 
       .loading-overlay {
@@ -181,8 +172,13 @@ class CalendlyWidget extends HTMLElement {
 
       /* Mobile responsive */
       @media (max-width: 700px) {
-        .calendly-container.expanded {
+        .calendly-container {
+          border-radius: 8px;
           min-height: 1400px;
+        }
+
+        .calendly-iframe {
+          height: 1400px;
         }
       }
     `;
@@ -194,7 +190,7 @@ class CalendlyWidget extends HTMLElement {
     if (!url) {
       this.shadowRoot.innerHTML = `
         <style>${this.getStyles()}</style>
-        <div class="calendly-container expanded">
+        <div class="calendly-container">
           <div class="error-message">
             <p>Calendly URL not configured.</p>
             <p>Add the <code>url</code> attribute to the widget.</p>
@@ -221,6 +217,16 @@ class CalendlyWidget extends HTMLElement {
         ></iframe>
       </div>
     `;
+
+    // Hide loading overlay when iframe loads
+    const iframe = this.shadowRoot.getElementById(this.iframeId);
+    const loading = this.shadowRoot.getElementById('loading');
+
+    iframe.addEventListener('load', () => {
+      setTimeout(() => {
+        loading.classList.add('hidden');
+      }, 500);
+    });
   }
 
   handleMessage(event) {
@@ -268,25 +274,15 @@ class CalendlyWidget extends HTMLElement {
 
     const container = this.shadowRoot.getElementById('container');
     const iframe = this.shadowRoot.getElementById(this.iframeId);
-    const loading = this.shadowRoot.getElementById('loading');
 
     if (container && iframe) {
-      const newHeight = Math.max(height, this.minHeight);
+      // Set iframe to exact content height
+      iframe.style.height = `${height}px`;
 
-      // Set explicit height and add expanded class
-      container.style.height = `${newHeight}px`;
-      container.classList.add('expanded');
-      iframe.style.height = `${newHeight}px`;
-
-      // On first height received, reveal the content
-      if (!this.hasReceivedHeight) {
-        this.hasReceivedHeight = true;
-
-        // Hide loading overlay and show iframe after expansion completes
-        setTimeout(() => {
-          loading.classList.add('hidden');
-          iframe.classList.add('visible');
-        }, 400); // Match the container transition duration
+      // If content is taller than min-height, expand container
+      // Otherwise, container stays at min-height and iframe is centered via flexbox
+      if (height > this.minHeight) {
+        container.style.minHeight = `${height}px`;
       }
     }
   }
