@@ -170,13 +170,6 @@ class CalendlyWidget extends HTMLElement {
         text-decoration: underline;
       }
 
-      /* Mobile responsive */
-      @media (max-width: 700px) {
-        .calendly-container {
-          border-radius: 8px;
-          min-height: 1400px;
-        }
-      }
     `;
   }
 
